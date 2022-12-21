@@ -2,13 +2,13 @@
 // https://restcountries.com/v2/name/${name}?fullText=true
 
 const result = document.querySelector('.result')
-const countryName = document.querySelector('#countryName')
 const btn = document.querySelector('#btn')
 const img = document.querySelector('#img')
 
 
 const getData = () => {
     // const country = 'india';
+    const countryName = document.querySelector('#countryName')
     const country = countryName.value;
     const url = `https://restcountries.com/v2/name/${country}?fullText=true`;
 
@@ -17,10 +17,11 @@ const getData = () => {
     fetch(url)
         .then(res => res.json())
         .then(data => {
-            // console.log(data);
-            const { name, capital, region, subregion, area, independent, borders, flag, callingCodes, currencies,languages,regionalBlocs,timezones,topLevelDomain
+            console.log(data);
+            const { name, capital, region, subregion, area, independent, borders, flag, callingCodes, currencies,languages,regionalBlocs,timezones,topLevelDomain,population,nativeName
             } = data[0];
             img.src = flag;
+
             result.innerHTML = `
             <div class="col-12 col-md-6">
             <div class="name"><strong>Name:</strong> ${name}</div>
@@ -28,11 +29,13 @@ const getData = () => {
             <div id="languages"></div>
             <div class="region"><strong>Region:</strong> ${region}</div>
             <div class="subregion"><strong>Subregion:</strong> ${subregion}</div>
+            <div class="area"><strong>Population:</strong> ${population}</div>
             <div class="area"><strong>Area:</strong> ${area} Square Kilometres</div>
             <div id="timezones"></div>
             <div class="independent"><strong>Independent:</strong> ${independent ? 'Yes' : 'No'}</div>
             </div>
             <div class="col-12 col-md-6">
+            <div class="name"><strong>NativeName:</strong> ${nativeName}</div>
             <div id="border" class="borders">
             </div>
             <div id="callingCodes">
@@ -42,7 +45,7 @@ const getData = () => {
             <div id="regionalBlocs">
             </div>
             <div id="topLevelDomain"></div>
-
+            
             </div>
             
             `
@@ -54,14 +57,32 @@ const getData = () => {
             getTimeZone(timezones)
             getDomain(topLevelDomain)
 
-        }).catch((err) => {
-            if (country == 0) {
+        }).catch(() => {
+
+            if (country.length == '') {
                 img.style.display = 'none'
                 result.innerHTML = `
-                    <h3 class="error">plese enter valid contry name</h3>
+                    <h3 class="error">input field cannot be empty</h3>
+                `
+            }else if(!(isNaN(country))){
+                img.style.display = 'none'
+                result.innerHTML = `
+                    <h3 class="error">input field cannot be number</h3>
+                `
+            }else{
+                img.style.display = 'none'
+                result.innerHTML = `
+                    <h3 class="error">contry name not found</h3>
                 `
             }
-           
+
+            // if (!(isNaN(country))) {
+            //     img.style.display = 'none'
+            //     result.innerHTML = `
+            //     <h3 class="error">Plses enter valid name</h3>
+            // `
+            // }
+
         })
 }
 // set borders of the contry
@@ -69,7 +90,14 @@ const border = (border) => {
     document.querySelector('#border').innerHTML = `
         <strong>Borders:</strong>
         `
-    border.forEach(element => {
+        if (border==null) {
+        let span = document.createElement('SPAN');
+        span.textContent = `No Borders`;
+        const borderContainer = document.querySelector('#border');
+        borderContainer.appendChild(span)
+        return span
+        }
+        border.forEach(element => {
         let span = document.createElement('SPAN');
         span.textContent = `"${element}"`;
         const borderContainer = document.querySelector('#border');
@@ -82,6 +110,14 @@ const border = (border) => {
         document.getElementById('languages').innerHTML= `
         <strong>Languages:</strong>
         `
+        if (language==null) {
+            let span = document.createElement('SPAN');
+            span.textContent = `No language found`;
+            const borderContainer = document.querySelector('#languages');
+            borderContainer.appendChild(span)
+            return span
+            }
+
         language.forEach((lang)=>{
            let span = document.createElement('span');
            span.textContent = `"${lang.name}"`;
@@ -96,6 +132,14 @@ const mobileCode = (call) => {
     document.querySelector('#callingCodes').innerHTML = `
         <strong>CallingCodes:</strong>
         `
+        if (call==null) {
+            let span = document.createElement('SPAN');
+            span.textContent = `No callCode found`;
+            const borderContainer = document.querySelector('#callingCodes');
+            borderContainer.appendChild(span)
+            return span
+            }
+
     call.forEach((element) => {
         let span = document.createElement('SPAN');
         span.textContent = `"${element}"`;
@@ -111,6 +155,14 @@ const ruppes = (data) => {
     <strong>Currencies:</strong>
     `
     // code name Symbol
+
+    if (data==null) {
+        let span = document.createElement('SPAN');
+        span.textContent = `Not found`;
+        const borderContainer = document.querySelector('#ruppes');
+        borderContainer.appendChild(span)
+        return span
+        }
 
     data.forEach((element)=>{
         // console.log(element.code,element.name,element.symbol);
@@ -136,6 +188,14 @@ const getRegionalBlocs =(blocks)=>{
     document.querySelector('#regionalBlocs').innerHTML = `
     <strong>RegionalBlocs:</strong>
     `
+    if (blocks==null) {
+        let span = document.createElement('SPAN');
+        span.textContent = `Not found`;
+        const borderContainer = document.querySelector('#regionalBlocs');
+        borderContainer.appendChild(span)
+        return span
+        }
+
     blocks.forEach((blocks)=>{
         let span = document.createElement('span');
         span.textContent= `${blocks.acronym} - ${blocks.name}`
@@ -148,9 +208,18 @@ const getRegionalBlocs =(blocks)=>{
         document.querySelector('#timezones').innerHTML = `
         <strong>TimeZone:</strong>
         `
+        if (data==null) {
+            let span = document.createElement('SPAN');
+            span.textContent = `Not found`;
+            const borderContainer = document.querySelector('#timezones');
+            borderContainer.appendChild(span)
+            return span
+            }
+
+
         data.forEach((time)=>{
             let span = document.createElement('span');
-            span.textContent=time;
+            span.textContent= `"${time}" `;
 
             document.querySelector('#timezones').appendChild(span)
         })
@@ -161,6 +230,13 @@ const getRegionalBlocs =(blocks)=>{
         document.querySelector('#topLevelDomain').innerHTML = `
         <strong>TopLevelDomain:</strong>
         `
+        if (domain==null) {
+            let span = document.createElement('SPAN');
+            span.textContent = `Not found`;
+            const borderContainer = document.querySelector('#topLevelDomain');
+            borderContainer.appendChild(span)
+            return span
+            }
         domain.map((domainName)=>{
             let span = document.createElement('span');
             span.textContent = domainName;
