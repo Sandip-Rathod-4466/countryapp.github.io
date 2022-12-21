@@ -61,13 +61,7 @@ const getData = () => {
                     <h3 class="error">plese enter valid contry name</h3>
                 `
             }
-            // else{
-            //     img.style.display = 'none'
-            //     result.innerHTML = `
-            //         <h3 class="error">Please enter valid  country  name</h3>
-            //     `
-            // }
-
+           
         })
 }
 // set borders of the contry
