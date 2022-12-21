@@ -58,15 +58,16 @@ const getData = () => {
             if (country == 0) {
                 img.style.display = 'none'
                 result.innerHTML = `
-                    <h3 class="error">Input Field Cannot be empty</h3>
-                `
-            }
-            else{
-                img.style.display = 'none'
-                result.innerHTML = `
                     <h3 class="error">Please enter valid  country  name</h3>
                 `
             }
+        
+//             else{
+//                 img.style.display = 'none'
+//                 result.innerHTML = `
+//                     <h3 class="error">Please enter valid  country  name</h3>
+//                 `
+//             }
 
         })
 }
